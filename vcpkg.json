@@ -1,0 +1,9 @@
+{
+    "name": "comrade",
+    "version": "0.5.0",
+    "dependencies": [
+        "eigen3",
+        "boost",
+        "boost-odeint"
+    ]
+}

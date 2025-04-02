@@ -1,0 +1,106 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 19,
+      "patch": 0
+    },
+    "configurePresets": [
+      {
+        "name": "default-debug",
+        "displayName": "Default static debug",
+        "description": "Default compiler, default generator, static debug",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug",
+          "BUILD_SHARED_LIBS": "OFF"
+        }
+      },
+      {
+        "name": "default-debug-shared",
+        "displayName": "Default shared debug",
+        "description": "Default compiler, default generator, shared debug",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug",
+          "BUILD_SHARED_LIBS": "ON"
+        }
+      },
+      {
+        "name": "default-release",
+        "displayName": "Default static release",
+        "description": "Default compiler, default generator, static release",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug",
+          "BUILD_SHARED_LIBS": "OFF"
+        }
+      },
+      {
+        "name": "default-release-shared",
+        "displayName": "Default shared release",
+        "description": "Default compiler, default generator, shared release",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug",
+          "BUILD_SHARED_LIBS": "ON"
+        }
+      },
+      {
+        "name": "clang-debug",
+        "displayName": "Clang Debug",
+        "description": "Clang Debug",
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_C_COMPILER": "clang-16",
+          "CMAKE_CXX_COMPILER": "clang++-16",
+          "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+          "CMAKE_BUILD_TYPE": "Debug",
+          "BUILD_SHARED_LIBS": "OFF"
+        }
+      },
+      {
+        "name": "clang-release",
+        "displayName": "Clang Release",
+        "description": "Clang Release",
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_C_COMPILER": "clang-16",
+          "CMAKE_CXX_COMPILER": "clang++-16",
+          "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+          "CMAKE_BUILD_TYPE": "Release",
+          "BUILD_SHARED_LIBS": "OFF"
+        }
+      },
+      {
+        "name": "clang-debug shared",
+        "displayName": "Clang Debug shared",
+        "description": "Clang Debug shared",
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_C_COMPILER": "clang-16",
+          "CMAKE_CXX_COMPILER": "clang++-16",
+          "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+          "CMAKE_BUILD_TYPE": "Debug",
+          "BUILD_SHARED_LIBS": "ON"
+        }
+      },
+      {
+        "name": "clang-release shared",
+        "displayName": "Clang Release shared",
+        "description": "Clang Release shared",
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_C_COMPILER": "clang-16",
+          "CMAKE_CXX_COMPILER": "clang++-16",
+          "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+          "CMAKE_BUILD_TYPE": "Release",
+          "BUILD_SHARED_LIBS": "ON"
+        }
+      }
+    ]
+}
