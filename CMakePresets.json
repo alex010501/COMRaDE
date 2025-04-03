@@ -53,9 +53,10 @@
         "generator": "Ninja",
         "binaryDir": "${sourceDir}/build/${presetName}",
         "cacheVariables": {
-          "CMAKE_C_COMPILER": "clang-16",
-          "CMAKE_CXX_COMPILER": "clang++-16",
+          "CMAKE_C_COMPILER": "clang",
+          "CMAKE_CXX_COMPILER": "clang++",
           "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+          "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -lc++abi",
           "CMAKE_BUILD_TYPE": "Debug",
           "BUILD_SHARED_LIBS": "OFF"
         }
@@ -67,9 +68,10 @@
         "generator": "Ninja",
         "binaryDir": "${sourceDir}/build/${presetName}",
         "cacheVariables": {
-          "CMAKE_C_COMPILER": "clang-16",
-          "CMAKE_CXX_COMPILER": "clang++-16",
+          "CMAKE_C_COMPILER": "clang",
+          "CMAKE_CXX_COMPILER": "clang++",
           "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+          "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -lc++abi",
           "CMAKE_BUILD_TYPE": "Release",
           "BUILD_SHARED_LIBS": "OFF"
         }
@@ -81,9 +83,10 @@
         "generator": "Ninja",
         "binaryDir": "${sourceDir}/build/${presetName}",
         "cacheVariables": {
-          "CMAKE_C_COMPILER": "clang-16",
-          "CMAKE_CXX_COMPILER": "clang++-16",
+          "CMAKE_C_COMPILER": "clang",
+          "CMAKE_CXX_COMPILER": "clang++",
           "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+          "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -lc++abi",
           "CMAKE_BUILD_TYPE": "Debug",
           "BUILD_SHARED_LIBS": "ON"
         }
@@ -95,9 +98,10 @@
         "generator": "Ninja",
         "binaryDir": "${sourceDir}/build/${presetName}",
         "cacheVariables": {
-          "CMAKE_C_COMPILER": "clang-16",
-          "CMAKE_CXX_COMPILER": "clang++-16",
+          "CMAKE_C_COMPILER": "clang",
+          "CMAKE_CXX_COMPILER": "clang++",
           "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+          "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -lc++abi",
           "CMAKE_BUILD_TYPE": "Release",
           "BUILD_SHARED_LIBS": "ON"
         }

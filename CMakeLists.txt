@@ -52,7 +52,7 @@ endif()
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
 CACHE STRING "Vcpkg toolchain file")
 
-file(READ "${CMAKE_SOURCE_DIR}/vcpkg.json" VCPKG_JSON)
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg.json" VCPKG_JSON)
 string(JSON PROJECT_NAME GET "${VCPKG_JSON}" "name")
 string(JSON PROJECT_VERSION GET "${VCPKG_JSON}" "version")
 
@@ -86,4 +86,7 @@ endif()
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen)
+target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
+
+# Examples
+add_subdirectory(example)
