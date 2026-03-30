@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RobotAdditions.h"
+#include <COMRaDE/RobotMath/RobotAdditions.h>
 
 class RobotLink //Class of links of Robot include math and visualization
 {

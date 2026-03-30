@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "RobotLink.h"
-#include "RobotJoint.h"
-#include "RobotAdditions.h"
+#include <COMRaDE/RobotMath/RobotLink.h>
+#include <COMRaDE/RobotMath/RobotJoint.h>
+#include <COMRaDE/RobotMath/RobotAdditions.h>
 
 class RobotArm
 {

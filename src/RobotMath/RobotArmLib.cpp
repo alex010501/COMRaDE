@@ -1,5 +1,5 @@
 #include <iostream>
-#include <RobotArmLib.h>
+#include <COMRaDE/RobotMath/RobotArmLib.h>
 
 RobotArm::RobotArm(Offset p_originPoint, Offset p_endLinkZero, Axes p_AxisLinkZero)
 {

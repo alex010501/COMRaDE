@@ -1,110 +1,179 @@
 {
-    "version": 3,
-    "cmakeMinimumRequired": {
-      "major": 3,
-      "minor": 19,
-      "patch": 0
-    },
-    "configurePresets": [
-      {
-        "name": "default-debug",
-        "displayName": "Default static debug",
-        "description": "Default compiler, default generator, static debug",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Debug",
-          "BUILD_SHARED_LIBS": "OFF"
-        }
-      },
-      {
-        "name": "default-debug-shared",
-        "displayName": "Default shared debug",
-        "description": "Default compiler, default generator, shared debug",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Debug",
-          "BUILD_SHARED_LIBS": "ON"
-        }
-      },
-      {
-        "name": "default-release",
-        "displayName": "Default static release",
-        "description": "Default compiler, default generator, static release",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Debug",
-          "BUILD_SHARED_LIBS": "OFF"
-        }
-      },
-      {
-        "name": "default-release-shared",
-        "displayName": "Default shared release",
-        "description": "Default compiler, default generator, shared release",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Debug",
-          "BUILD_SHARED_LIBS": "ON"
-        }
-      },
-      {
-        "name": "clang-debug",
-        "displayName": "Clang Debug",
-        "description": "Clang Debug",
-        "generator": "Ninja",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_C_COMPILER": "clang",
-          "CMAKE_CXX_COMPILER": "clang++",
-          "CMAKE_CXX_FLAGS": "-stdlib=libc++",
-          "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -lc++abi",
-          "CMAKE_BUILD_TYPE": "Debug",
-          "BUILD_SHARED_LIBS": "OFF"
-        }
-      },
-      {
-        "name": "clang-release",
-        "displayName": "Clang Release",
-        "description": "Clang Release",
-        "generator": "Ninja",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_C_COMPILER": "clang",
-          "CMAKE_CXX_COMPILER": "clang++",
-          "CMAKE_CXX_FLAGS": "-stdlib=libc++",
-          "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -lc++abi",
-          "CMAKE_BUILD_TYPE": "Release",
-          "BUILD_SHARED_LIBS": "OFF"
-        }
-      },
-      {
-        "name": "clang-debug shared",
-        "displayName": "Clang Debug shared",
-        "description": "Clang Debug shared",
-        "generator": "Ninja",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_C_COMPILER": "clang",
-          "CMAKE_CXX_COMPILER": "clang++",
-          "CMAKE_CXX_FLAGS": "-stdlib=libc++",
-          "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -lc++abi",
-          "CMAKE_BUILD_TYPE": "Debug",
-          "BUILD_SHARED_LIBS": "ON"
-        }
-      },
-      {
-        "name": "clang-release shared",
-        "displayName": "Clang Release shared",
-        "description": "Clang Release shared",
-        "generator": "Ninja",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_C_COMPILER": "clang",
-          "CMAKE_CXX_COMPILER": "clang++",
-          "CMAKE_CXX_FLAGS": "-stdlib=libc++",
-          "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -lc++abi",
-          "CMAKE_BUILD_TYPE": "Release",
-          "BUILD_SHARED_LIBS": "ON"
-        }
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "17",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_MAKE_PROGRAM": "ninja"
       }
-    ]
+    },
+    {
+      "name": "config-debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "config-release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "config-relwithdebinfo",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "config-minsizerel",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel"
+      }
+    },
+    {
+      "name": "windows-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl"
+      }
+    },
+    {
+      "name": "linux-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      }
+    },
+    {
+      "name": "windows-debug",
+      "inherits": [
+        "windows-base",
+        "config-debug"
+      ],
+      "displayName": "Windows Debug"
+    },
+    {
+      "name": "windows-release",
+      "inherits": [
+        "windows-base",
+        "config-release"
+      ],
+      "displayName": "Windows Release"
+    },
+    {
+      "name": "windows-relwithdebinfo",
+      "inherits": [
+        "windows-base",
+        "config-relwithdebinfo"
+      ],
+      "displayName": "Windows RelWithDebInfo"
+    },
+    {
+      "name": "windows-minsizerel",
+      "inherits": [
+        "windows-base",
+        "config-minsizerel"
+      ],
+      "displayName": "Windows MinSizeRel"
+    },
+    {
+      "name": "linux-debug",
+      "inherits": [
+        "linux-base",
+        "config-debug"
+      ],
+      "displayName": "Linux Debug"
+    },
+    {
+      "name": "linux-release",
+      "inherits": [
+        "linux-base",
+        "config-release"
+      ],
+      "displayName": "Linux Release"
+    },
+    {
+      "name": "linux-relwithdebinfo",
+      "inherits": [
+        "linux-base",
+        "config-relwithdebinfo"
+      ],
+      "displayName": "Linux RelWithDebInfo"
+    },
+    {
+      "name": "linux-minsizerel",
+      "inherits": [
+        "linux-base",
+        "config-minsizerel"
+      ],
+      "displayName": "Linux MinSizeRel"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-windows-debug",
+      "configurePreset": "windows-debug"
+    },
+    {
+      "name": "build-windows-release",
+      "configurePreset": "windows-release"
+    },
+    {
+      "name": "build-windows-relwithdebinfo",
+      "configurePreset": "windows-relwithdebinfo"
+    },
+    {
+      "name": "build-windows-minsizerel",
+      "configurePreset": "windows-minsizerel"
+    },
+    {
+      "name": "build-linux-debug",
+      "configurePreset": "linux-debug"
+    },
+    {
+      "name": "build-linux-release",
+      "configurePreset": "linux-release"
+    },
+    {
+      "name": "build-linux-relwithdebinfo",
+      "configurePreset": "linux-relwithdebinfo"
+    },
+    {
+      "name": "build-linux-minsizerel",
+      "configurePreset": "linux-minsizerel"
+    }
+  ]
 }

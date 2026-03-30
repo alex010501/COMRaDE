@@ -1,92 +1,81 @@
-# CMake version
-cmake_minimum_required(VERSION 3.19)
-
-# vcpkg auto-download and integration
-if(NOT EXISTS "${CMAKE_SOURCE_DIR}/vcpkg")
-    # Download and install vcpkg if not found
-    include(FetchContent)
-    
-    # Set vcpkg installation location 
-    set(VCPKG_INSTALL_DIR "${CMAKE_SOURCE_DIR}/vcpkg" CACHE PATH "Where to install vcpkg")
-    message(STATUS "VCPKG install dir: ${VCPKG_INSTALL_DIR}")
-    
-    # Download vcpkg
-    FetchContent_Declare(
-        vcpkg
-        GIT_REPOSITORY https://github.com/Microsoft/vcpkg.git
-        GIT_TAG master
-        SOURCE_DIR "${VCPKG_INSTALL_DIR}"
-    )
-    
-    FetchContent_GetProperties(vcpkg)
-    if(NOT vcpkg_POPULATED)
-        message(STATUS "Downloading vcpkg...")
-        FetchContent_Populate(vcpkg)
-        
-        # Bootstrap vcpkg
-        if(UNIX)
-            message(STATUS "Bootstrapping vcpkg...")
-            execute_process(
-                COMMAND ./bootstrap-vcpkg.sh
-                WORKING_DIRECTORY "${VCPKG_INSTALL_DIR}"
-                RESULT_VARIABLE bootstrap_result
-            )
-        else()
-            message(STATUS "Bootstrapping vcpkg...")
-            execute_process(
-                COMMAND ./bootstrap-vcpkg.bat
-                WORKING_DIRECTORY "${VCPKG_INSTALL_DIR}"
-                RESULT_VARIABLE bootstrap_result
-            )
-        endif()
-        
-        if(NOT bootstrap_result EQUAL 0)
-            message(FATAL_ERROR "Failed to bootstrap vcpkg")
-        endif()
-    endif()
-    
-    set(VCPKG_ROOT "${VCPKG_INSTALL_DIR}" CACHE PATH "vcpkg root directory" FORCE)
-endif()
-
-# Set vcpkg toolchain file
-set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
-CACHE STRING "Vcpkg toolchain file")
+cmake_minimum_required(VERSION 3.21)
 
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg.json" VCPKG_JSON)
 string(JSON PROJECT_NAME GET "${VCPKG_JSON}" "name")
 string(JSON PROJECT_VERSION GET "${VCPKG_JSON}" "version")
 
-project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
+project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
-# C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Set build folders
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE})
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE})
+include(GNUInstallDirs)
 
-# Eigen
+set(COMRADE_ROOT_BIN_DIR "${CMAKE_SOURCE_DIR}/bin")
+set(COMRADE_ROOT_LIB_DIR "${CMAKE_SOURCE_DIR}/lib")
+
+function(comrade_set_output_dirs target runtime_base_dir archive_base_dir)
+    set_target_properties(${target} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG "${runtime_base_dir}/Debug"
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${runtime_base_dir}/Release"
+        RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${runtime_base_dir}/RelWithDebInfo"
+        RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL "${runtime_base_dir}/MinSizeRel"
+        LIBRARY_OUTPUT_DIRECTORY_DEBUG "${runtime_base_dir}/Debug"
+        LIBRARY_OUTPUT_DIRECTORY_RELEASE "${runtime_base_dir}/Release"
+        LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO "${runtime_base_dir}/RelWithDebInfo"
+        LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL "${runtime_base_dir}/MinSizeRel"
+        ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${archive_base_dir}/Debug"
+        ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${archive_base_dir}/Release"
+        ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${archive_base_dir}/RelWithDebInfo"
+        ARCHIVE_OUTPUT_DIRECTORY_MINSIZEREL "${archive_base_dir}/MinSizeRel"
+    )
+endfunction()
+
 find_package(Eigen3 CONFIG REQUIRED)
-find_package(boost_numeric_odeint CONFIG REQUIRED)
+find_package(Boost REQUIRED COMPONENTS numeric_odeint)
+find_package(assimp CONFIG REQUIRED)
+find_package(Bullet CONFIG REQUIRED)
+find_package(DataFrame CONFIG REQUIRED)
+find_package(urdfdom CONFIG REQUIRED)
+find_package(tinyxml CONFIG REQUIRED)
 
-# Set 'RAL_SOURCES' variable
-file(GLOB_RECURSE RAL_SOURCES CONFIGURE_DEPENDS "include/*.h"
-                                                "src/*.cpp")
+file(GLOB_RECURSE LIB_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+)
 
-# Build RAL library
-if(${BUILD_SHARED_LIBS})
-    add_library(${PROJECT_NAME} SHARED ${RAL_SOURCES})
-else()
-    add_library(${PROJECT_NAME} STATIC ${RAL_SOURCES})
+add_library(${PROJECT_NAME} SHARED ${LIB_SOURCES})
+comrade_set_output_dirs(${PROJECT_NAME} "${COMRADE_ROOT_BIN_DIR}" "${COMRADE_ROOT_LIB_DIR}")
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        Eigen3::Eigen
+        Boost::numeric_odeint
+        assimp::assimp
+        BulletDynamics
+        BulletCollision
+        LinearMath
+        DataFrame::DataFrame
+        unofficial-tinyxml::unofficial-tinyxml
+)
+
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+            $<$<CONFIG:Debug>:msvcprtd>
+            $<$<NOT:$<CONFIG:Debug>>:msvcprt>
+    )
 endif()
 
-# Set include directories
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_compile_definitions(${PROJECT_NAME}
+    PRIVATE DLL_LIBRARY_EXPORTS
+)
 
-# Link libraries
-target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
-
-# Examples
 add_subdirectory(example)

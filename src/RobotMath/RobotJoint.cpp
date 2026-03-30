@@ -1,4 +1,4 @@
-#include <RobotJoint.h>
+#include <COMRaDE/RobotMath/RobotJoint.h>
 
 RobotJoint::RobotJoint(MoveType p_j, double p_maxPos, double p_minPos)
 {

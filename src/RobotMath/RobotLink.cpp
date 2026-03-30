@@ -1,4 +1,4 @@
-#include <RobotLink.h>
+#include <COMRaDE/RobotMath/RobotLink.h>
 
 RobotLink::RobotLink(Offset p_endLink, Axes p_AxisLink, Axes p_AxisLinkPrev)
 {

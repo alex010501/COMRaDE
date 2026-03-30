@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RobotAdditions.h"
+#include <COMRaDE/RobotMath/RobotAdditions.h>
 
 enum DriveTarget
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MathAdditions.h"
+#include <COMRaDE/RobotMath/MathAdditions.h>
 
 #define PI 3.141592653589793
 
